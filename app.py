@@ -9,7 +9,6 @@ import random
 import plotly.graph_objs as go
 from collections import deque
 
-
 import os
 import pathlib
 import numpy as np
@@ -22,9 +21,8 @@ from dash.exceptions import PreventUpdate
 from dash.dependencies import Input, Output, State
 from scipy.stats import rayleigh
 
-
 GRAPH_INTERVAL = os.environ.get("GRAPH_INTERVAL", 5000)
-
+# Creating Dash app
 app = dash.Dash(
     __name__,
     meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}],
@@ -37,6 +35,7 @@ app_color = {"graph_bg": "#082255", "graph_line": "#007ACE"}
 h=pd.read_csv('time-series-splitted/TIME_serie_donnees-hospitalieres-Number_of_people_currently_hospitalized.csv')
 h=h.melt(id_vars=['Unnamed: 0','code','DEPARTMENT'])
 h=h.groupby(['DEPARTMENT','variable'])['value'].sum().reset_index()
+# Generating 3 Plots from the pandemic dataset
 import plotly.express as px
 fig1 = px.scatter(h, x="variable", y="value", color="DEPARTMENT").update_traces(mode='lines+markers').update_layout(dict(
         plot_bgcolor=app_color["graph_bg"],
@@ -62,6 +61,7 @@ fig1 = px.scatter(h, x="variable", y="value", color="DEPARTMENT").update_traces(
 p=pd.read_csv('time-series-splitted/TIME_serie_donnees-hospitalieres-Total_amount_of_patient_that_returned_home.csv')
 p=p.melt(id_vars=['Unnamed: 0','code','DEPARTMENT'])
 p=p.groupby(['DEPARTMENT','variable'])['value'].sum().reset_index()
+# Generating 2nd Plot
 import plotly.express as px
 fig2 = px.scatter(p, x="variable", y="value", color="DEPARTMENT").update_traces(mode='lines+markers').update_layout(dict(
         height=350,
@@ -90,6 +90,7 @@ fig2 = px.scatter(p, x="variable", y="value", color="DEPARTMENT").update_traces(
 d=pd.read_csv('time-series-splitted/TIME_serie_donnees-hospitalieres-Total_amout_of_deaths_at_the_hospital.csv')
 d=d.melt(id_vars=['Unnamed: 0','code','DEPARTMENT'])
 d=d.groupby(['DEPARTMENT','variable'])['value'].sum().reset_index()
+# Generating 3rd Plot
 import plotly.express as px
 fig3 = px.scatter(d, x="variable", y="value", color="DEPARTMENT").update_traces(mode='lines+markers').update_layout(dict(
         height=350,
@@ -124,7 +125,7 @@ fig3 = px.scatter(d, x="variable", y="value", color="DEPARTMENT").update_traces(
     ))
 
 
-
+# Defining the layout of the web app
 app.layout = html.Div(
     [
         # header
